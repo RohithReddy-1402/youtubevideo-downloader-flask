@@ -41,3 +41,5 @@ def download_video():
 
     except Exception as e:
         return f"Error: {str(e)}", 500
+port = int(os.environ.get('PORT', 10000)) 
+app.run(host='0.0.0.0', port=port)
