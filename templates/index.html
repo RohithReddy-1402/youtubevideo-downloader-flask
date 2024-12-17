@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Video Downloader</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+            flex-direction: column;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        label {
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: block;
+            color: #555;
+        }
+
+        input[type="url"], select, button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        input[type="url"]:focus, button:focus, select:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #message {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #d9534f;
+        }
+        #message.success {
+            color: #5bc0de;
+        }
+        #loading {
+            display: none;
+            margin-top: 20px;
+            font-size: 16px;
+            color: #28a745;
+        }
+        .social-links {
+            margin-top: 30px;
+        }
+
+        .social-links a {
+            text-decoration: none;
+            margin: 10px;
+            font-size: 24px;
+            color: #333;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: #007bff;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+        }
+        label, select, input {
+            margin-bottom: 10px;
+            width: 100%;
+            padding: 8px;
+
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+        .social-links {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .social-links a {
+            margin: 0 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .social-links a:hover {
+            text-decoration: underline;
+        }
+        .fa-youtube{
+            color:red;
+        }
+        .fa-instagram{
+            color:hotpink;
+        }
+        .fa-linkedin{
+            color:blue;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>YouTube Video Downloader</h1>
+        <form id="download-form">
+            <label for="url">YouTube Video URL:</label>
+            <input type="url" id="url" required placeholder="Enter video URL"><br><br>
+
+            <label for="type">Download as:</label>
+            <select id="type">
+                <option value="video">Video</option>
+                <option value="audio">MP3</option>
+            </select><br><br>
+
+            <div id="video-options">
+                <label for="resolution">Resolution:</label>
+                <select id="resolution">
+                    <option value="720p">720p</option>
+                    <option value="1080p">1080p</option>
+                    <option value="360p">360p</option>
+                    <option value="144p">144p</option>
+                </select><br><br>
+            </div>
+
+            <div id="audio-options" style="display: none;">
+                <label for="audio-quality">Audio Quality:</label>
+                <select id="audio-quality">
+                    <option value="192kbps">192 kbps</option>
+                    <option value="256kbps">256 kbps</option>
+                    <option value="320kbps">320 kbps</option>
+                </select><br><br>
+            </div>
+
+            <button type="submit">Download</button>
+        </form>
+
+        <div id="message"></div>
+        <div id="loading" class="loading">Downloading, please wait...</div>
+
+        <div class="social-links">
+            <h3>Follow Me:</h3>
+            <a href="https://www.youtube.com/@TechDecoded-81" target="_blank"><i class="fab fa-youtube"></i>
+                YouTube</a>
+            <a href="https://www.instagram.com/stark_14_rohith/" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+            <a href="https://www.linkedin.com/in/rohith-kumar-reddy-s-367b31278/" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("type").addEventListener("change", function() {
+            const type = this.value;
+            const videoOptions = document.getElementById("video-options");
+            const audioOptions = document.getElementById("audio-options");
+            if (type === "video") {
+                videoOptions.style.display = "block";
+                audioOptions.style.display = "none";
+            } else if (type === "audio") {
+                videoOptions.style.display = "none";
+                audioOptions.style.display = "block";
+            }
+        });
+        document.getElementById("download-form").addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const url = document.getElementById("url").value;
+            const resolution = document.getElementById("resolution").value;
+            const downloadType = document.getElementById("type").value;
+            const audioQuality = document.getElementById("audio-quality").value;
+            const messageDiv = document.getElementById("message");
+            const loadingDiv = document.getElementById("loading");
+            loadingDiv.style.display = 'block';
+            messageDiv.textContent = '';
+
+            const response = await fetch(`/download?url=${encodeURIComponent(url)}&resolution=${resolution}&type=${downloadType}&audio_quality=${audioQuality}`);
+
+            if (response.ok) {
+                const blob = await response.blob();
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                const contentDisposition = response.headers.get("Content-Disposition");
+                const filename = contentDisposition
+                    ? contentDisposition.split("filename=")[1]
+                    : "downloaded_file";
+
+                link.download = filename.replace(/"/g, "");
+                link.click();
+                URL.revokeObjectURL(link.href);
+                loadingDiv.style.display = 'none';
+                messageDiv.textContent = `Download successful! Saved as: ${filename}`;
+                messageDiv.classList.remove("error");
+                messageDiv.classList.add("success");
+            } else {
+                const error = await response.json();
+                loadingDiv.style.display = 'none';
+                messageDiv.textContent = `Error: ${error.error}`;
+                messageDiv.classList.remove("success");
+                messageDiv.classList.add("error");
+            }
+        });
+    </script>
+</body>
+</html>
